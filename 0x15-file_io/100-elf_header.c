@@ -1,7 +1,10 @@
 #include "main.h"
 #include "check_elf.c"
 #include "print_abi.c"
-#include "print_class"
+#include "print_class.c"
+#include "print_magic.c"
+#include "print_osabi.c"
+#include "print_version.c"
 #include <elf.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -70,6 +73,27 @@ void print_entry(unsigned long int e_entry, unsigned char *e_ident)
 	else
 		printf("%#lx\n", e_entry);
 }
+
+void print_data(unsigned char *e_ident)
+{
+	printf(" Data: ");
+
+	switch (e_ident[EI_DATA])
+	{
+	case ELFDATANONE:
+		printf("none\n");
+		break;
+	case ELFDATA2LSB:
+		printf("2's complement, little endian\n");
+		break;
+	case ELFDATA2MSB:
+		printf("2's complement, big endian\n");
+		break;
+	default:
+		printf("<unknown: %x>\n", e_ident[EI_CLASS]);
+	}
+}
+
 
 /**
  * close_elf - Closes an ELF file.
